@@ -1,4 +1,5 @@
-PREFIX s:     <http://cambridgesemantics.com/ontologies/DataToolkit#>
+[
+{key: "query", value: "PREFIX s:     <http://cambridgesemantics.com/ontologies/DataToolkit#>
 PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
@@ -42,4 +43,5 @@ WHERE
   BIND(SHA1(?director) AS ?director_id)
   BIND(IRI(CONCAT("http://demo.movies.com/ghibli/",?film_id)) AS ?movie)
   BIND(IRI(CONCAT("http://demo.movies.com/ghibli/director/",?director_id)) AS ?movie_director)
-}
+}"
+}]
