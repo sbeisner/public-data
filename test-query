@@ -1,0 +1,45 @@
+PREFIX s:     <http://cambridgesemantics.com/ontologies/DataToolkit#>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl:   <http://www.w3.org/2002/07/owl#>
+PREFIX anzo:  <http://openanzo.org/ontologies/2008/07/Anzo#>
+PREFIX zowl:  <http://openanzo.org/ontologies/2009/05/AnzoOwl#>
+PREFIX dc:    <http://purl.org/dc/elements/1.1/>
+PREFIX canon: <http://altair.com/ontologies/ZS_Movies_Canonical_Ontology#>
+# targetGraph is replaced with the Layers URI at runtime
+# usingSources is replaced with the URIs of the Layer's Sources at runtime
+
+INSERT {
+    GRAPH ${targetGraph} {
+    	?movie a canon:Movie ;
+      	canon:id ?film_id ;
+      	canon:name ?title ;
+     .
+    ?movie_director a canon:Director, canon:Person ;
+      canon:name ?director ;
+      canon:Person.workedOn ?movie ;
+      .
+    }
+}
+${usingSources}
+
+WHERE
+{
+   # SERVICE Clause: Include the following service call when reading or inserting data.
+    SERVICE TOPDOWN <http://cambridgesemantics.com/services/DataToolkit>
+    { 
+      ?data a s:HttpSource ;
+    s:url "${db.7a1d0e952b3fb26fb366502d3dabc167.url}" ;
+        # Mapping variables
+        #?mapping_variable ( [ "binding" ] [ datatype ] [ "datetime_format" ] ) ;
+        
+    ?film_id("id" xsd:string);
+    ?title();
+    ?director();
+    ?release_date();
+   }
+  BIND(SHA1(?director) AS ?director_id)
+  BIND(IRI(CONCAT("http://demo.movies.com/ghibli/",?film_id)) AS ?movie)
+  BIND(IRI(CONCAT("http://demo.movies.com/ghibli/director/",?director_id)) AS ?movie_director)
+}
